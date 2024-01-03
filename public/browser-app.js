@@ -2,6 +2,8 @@ const tasksDOM = document.querySelector('.tasks')
 const loadingDOM = document.querySelector('.loading-text')
 const formDOM = document.querySelector('.task-form')
 const taskInputDOM = document.querySelector('.task-input')
+const taskDescriptionDOM = document.querySelector('.task-input-description')
+const taskStatusDOM = document.querySelector('.task-input-status')
 const formAlertDOM = document.querySelector('.form-alert')
 // Load tasks from /api/tasks
 const showTasks = async () => {
@@ -17,11 +19,21 @@ const showTasks = async () => {
     }
     const allTasks = tasks
       .map((task) => {
-        const { completed, _id: taskID, name } = task
-        return `<div class="single-task ${completed && 'task-completed'}">
-<h5><span><i class="far fa-check-circle"></i></span>${name}</h5>
-<div class="task-links">
+        const {_id: taskID, name, status, description } = task
+        var isCompleted = false;
+        var inProgress = false;
+        if(status === 'In Progress'){
+          inProgress = true;
+        }else if(status === 'Done'){
+          isCompleted = true
+        }
+        const truncatedDescription = description.substring(0, 15);
+        return `<div class="single-task ${isCompleted && 'task-completed'}">
+<h5><span> <i class="${inProgress ? 'fas fa-spinner' : isCompleted ? 'far fa-check-circle' : 'far fa-circle'}"></i></i></span>${name} -  ${truncatedDescription}...</h5>
 
+<div class="task-links">
+<div>
+</div>
 
 
 <!-- edit link -->
@@ -67,18 +79,25 @@ tasksDOM.addEventListener('click', async (e) => {
 
 formDOM.addEventListener('submit', async (e) => {
   e.preventDefault()
-  const name = taskInputDOM.value
-
+  const name = document.querySelector('[name="name"]').value;
+  const description = document.querySelector('[name="description"]').value;
+  const status = document.querySelector('[name="status"]').value;
   try {
-    await axios.post('/api/v1/tasks', { name })
+    await axios.post('/api/v1/tasks', { name, description, status})
     showTasks()
     taskInputDOM.value = ''
+    taskDescriptionDOM.value = ''
+    taskStatusDOM.value = 'To Do'
+    // document.querySelector('[name="name"]').value = ''
+    // document.querySelector('[name="description"]').value = ''
+    // document.querySelector('[name="status"]').value = ''
+
     formAlertDOM.style.display = 'block'
     formAlertDOM.textContent = `success, task added`
     formAlertDOM.classList.add('text-success')
   } catch (error) {
     formAlertDOM.style.display = 'block'
-    formAlertDOM.innerHTML = `error, please try again`
+    formAlertDOM.innerHTML = `error, please try again ${error}`
   }
   setTimeout(() => {
     formAlertDOM.style.display = 'none'

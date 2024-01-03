@@ -232,6 +232,7 @@ textarea {
 @media screen and (min-width: 576px) {
   .form-control {
     display: flex;
+    flex-direction: column;
   }
   .task-input {
     border-radius: 0;

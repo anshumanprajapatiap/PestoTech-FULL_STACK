@@ -21,12 +21,33 @@
     <form class="task-form">
       <h4>task manager</h4>
       <div class="form-control">
+
+        <label for="title">Title:</label>
         <input
           type="text"
           name="name"
           class="task-input"
           placeholder="e.g. wash dishes"
         />
+        <br>
+        <label for="description">Description:</label>
+        <textarea
+          name="description"
+          id="description"
+          class="task-input-description"
+          placeholder="Enter task description..."
+          rows="2"
+        ></textarea>
+        <br>
+        <label for="status">Status:</label>
+        <select name="status" id="status" class="task-input-status">
+          <option value="To Do">To Do</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+        <br><br>
+
+
         <button type="submit" class="btn submit-btn">submit</button>
       </div>
       <div class="form-alert"></div>
